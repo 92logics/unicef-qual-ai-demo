@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>92 Logics prototype · Coral Coast Youth Voices (qualitative AI sample)</title>
+  <meta name="description" content="92 Logics prototype: AI-assisted qualitative analysis sample for UNICEF-style LTA work. Not an official UNICEF system. Fictional data only. Scripted suggestions, no live AI API.">
+  <style>
+    :root {
+      --ink: #161b22; --muted: #56606b; --paper: #eef2f6; --card: #ffffff; --line: #d5dde6;
+      --navy: #0b2a4a; --navy-2: #143f6b; --accent: #0f6e56; --accent-2: #0c5c48;
+      --ocean: #0a6c8f; --ocean-2: #085672;
+      --sample: #6b4f1d; --sample-bg: #f7f0e2; --alert: #7a2e2e; --alert-bg: #f8ecec;
+      --ok: #1d6b3a; --ok-bg: #e7f4ec; --warn: #7a5410; --warn-bg: #fbf1dc;
+      --shadow: 0 10px 28px rgba(11, 42, 74, 0.07);
+      --serif: Georgia, "Iowan Old Style", Palatino, "Palatino Linotype", serif;
+      --sans: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+      --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; color: var(--ink);
+      background: radial-gradient(1000px 380px at 8% -8%, #cfe8f3 0%, transparent 55%),
+                  radial-gradient(800px 320px at 92% 0%, #d9e6f5 0%, transparent 50%), var(--paper);
+      font-family: var(--sans); font-size: 16px; line-height: 1.5;
+    }
+    .skip { position: absolute; left: -999px; top: 0; background: #fff; padding: 0.5rem 1rem; }
+    .skip:focus { left: 0.5rem; top: 0.5rem; z-index: 50; }
+    .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .banner { background: var(--navy); color: #f3f7fb; padding: 0.65rem 1.25rem; text-align: center; font-size: 0.95rem; }
+    .top { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1.25rem 0.5rem; display: grid; grid-template-columns: auto 1fr; gap: 1.25rem 1.75rem; align-items: end; }
+    .brand { display: flex; gap: 0.85rem; align-items: center; }
+    .mark { width: 3rem; height: 3rem; display: grid; place-items: center; background: var(--navy); color: #f3f7fb; font-family: var(--serif); font-weight: 700; letter-spacing: -0.04em; }
+    .eyebrow { margin: 0; color: var(--ocean); font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .top h1 { margin: 0.15rem 0 0; font-family: var(--serif); font-size: 1.65rem; font-weight: 650; letter-spacing: -0.02em; }
+    .lede { margin: 0; color: var(--muted); max-width: 48rem; font-size: 0.98rem; }
+    .wrap { max-width: 1180px; margin: 1rem auto 2rem; padding: 0 1.25rem; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
+    h2 { font-family: var(--serif); font-weight: 650; font-size: 1.3rem; margin: 0 0 0.6rem; letter-spacing: -0.01em; }
+    h3 { font-size: 1rem; margin: 0 0 0.5rem; }
+    .muted { color: var(--muted); }
+    .fine { color: var(--muted); font-size: 0.84rem; margin: 0.6rem 0 0; }
+    .sample-note { margin: 0 0 0.75rem; padding: 0.45rem 0.65rem; border-radius: 8px; background: var(--sample-bg); color: var(--sample); font-size: 0.85rem; }
+    label { display: block; font-weight: 600; font-size: 0.9rem; margin: 0.7rem 0 0.25rem; }
+    input, select, textarea { width: 100%; font: inherit; padding: 0.55rem 0.7rem; border: 1px solid #b9c4d0; border-radius: 10px; background: #fff; color: var(--ink); }
+    textarea { min-height: 10rem; resize: vertical; line-height: 1.45; font-family: var(--sans); }
+    input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 3px solid #f0b429; outline-offset: 2px; }
+    button { font: inherit; cursor: pointer; border-radius: 10px; }
+    .btn { border: 0; background: var(--accent); color: #fff; padding: 0.55rem 0.95rem; font-weight: 600; }
+    .btn:hover { background: var(--accent-2); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn.secondary { background: #e8eef5; color: var(--navy-2); }
+    .btn.secondary:hover { background: #d9e3ee; }
+    .btn.ocean { background: var(--ocean); }
+    .btn.ocean:hover { background: var(--ocean-2); }
+    .btn.danger { background: var(--alert); }
+    .btn.sm { padding: 0.3rem 0.55rem; font-size: 0.82rem; border-radius: 8px; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+    .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
+    .appbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; align-items: center; padding: 0.85rem 1rem; border-bottom: 1px solid var(--line); background: #f8fbfd; border-radius: 14px 14px 0 0; }
+    .who { margin: 0; font-size: 0.9rem; }
+    .pill { display: inline-block; padding: 0.15rem 0.55rem; border-radius: 999px; background: #e8eef5; color: var(--navy-2); font-size: 0.78rem; font-weight: 600; }
+    .pill.ok { background: var(--ok-bg); color: var(--ok); }
+    .pill.warn { background: var(--warn-bg); color: var(--warn); }
+    .pill.bad { background: var(--alert-bg); color: var(--alert); }
+    .pill.ocean { background: #e0f2f8; color: var(--ocean-2); }
+    .layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); }
+    nav.side { border-right: 1px solid var(--line); padding: 0.75rem; }
+    nav.side [role="tablist"] { display: flex; flex-direction: column; gap: 0.3rem; }
+    nav.side button { text-align: left; border: 1px solid transparent; background: transparent; color: var(--ink); padding: 0.55rem 0.7rem; font-size: 0.93rem; }
+    nav.side button:hover { background: #f1f5f9; }
+    nav.side button[aria-selected="true"] { background: var(--navy); color: #fff; }
+    .panel { padding: 1.1rem 1.2rem 1.4rem; min-width: 0; }
+    .kpi { padding: 0.8rem 0.9rem; border: 1px solid var(--line); border-radius: 12px; background: #fbfcfe; }
+    .kpi .v { font-size: 1.55rem; font-weight: 700; font-family: var(--serif); }
+    .kpi .l { font-size: 0.82rem; color: var(--muted); }
+    .tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; margin: 0.5rem 0 1rem; }
+    table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+    caption { text-align: left; padding: 0.6rem 0.75rem; font-weight: 650; background: #f8fbfd; border-bottom: 1px solid var(--line); }
+    th, td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #e6ebf1; text-align: left; vertical-align: top; }
+    th { background: #f8fbfd; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .bar { height: 0.6rem; background: #e3e9f0; border-radius: 999px; overflow: hidden; min-width: 80px; }
+    .bar > span { display: block; height: 100%; background: var(--accent); }
+    .review { border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; background: #fbfcfe; }
+    .quote {
+      border-left: 3px solid var(--ocean); padding: 0.55rem 0.75rem; margin: 0.4rem 0;
+      background: #f4f9fc; border-radius: 0 8px 8px 0; font-size: 0.92rem;
+    }
+    .quote .meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+    .turn { padding: 0.55rem 0.7rem; border-bottom: 1px solid #eef2f6; }
+    .turn:last-child { border-bottom: 0; }
+    .turn .who { font-weight: 650; font-size: 0.85rem; }
+    .turn .ts { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); margin-left: 0.4rem; }
+    .turn .txt { margin: 0.2rem 0 0; }
+    .transcript-box {
+      border: 1px solid var(--line); border-radius: 12px; max-height: 28rem; overflow-y: auto; background: #fff;
+    }
+    .code-sug {
+      border: 1px solid var(--line); border-radius: 12px; padding: 0.75rem; background: #fff; margin: 0.4rem 0;
+    }
+    .code-sug.accepted { border-color: #9dceb0; background: var(--ok-bg); }
+    .code-sug.rejected { border-color: #e0b4b4; background: var(--alert-bg); opacity: 0.85; }
+    .code-sug.edited { border-color: #e0c98a; background: var(--warn-bg); }
+    .theme-card {
+      border: 1px solid var(--line); border-radius: 12px; padding: 0.9rem; background: #fbfcfe;
+    }
+    .list-pick {
+      display: flex; flex-direction: column; gap: 0.35rem; max-height: 22rem; overflow-y: auto;
+    }
+    .list-pick button {
+      text-align: left; border: 1px solid var(--line); background: #fff; padding: 0.55rem 0.7rem; border-radius: 10px;
+    }
+    .list-pick button:hover { background: #f8fbfd; }
+    .list-pick button[aria-pressed="true"] { border-color: var(--navy); background: #eef4fa; }
+    footer { max-width: 1180px; margin: 0 auto 2rem; padding: 0 1.25rem; color: var(--muted); font-size: 0.88rem; text-align: center; }
+    footer p { margin: 0.2rem 0; }
+    footer a { color: var(--navy-2); }
+    [hidden] { display: none !important; }
+    .layout > *, .grid2 > *, .grid3 > *, .grid4 > *, .wrap, .card { min-width: 0; }
+    .nw { white-space: nowrap; }
+    .stack { display: flex; flex-direction: column; gap: 0.75rem; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .split-33 { display: grid; grid-template-columns: 1fr 1.4fr; gap: 1rem; }
+    .pt-label { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+    @media (max-width: 900px) {
+      .top, .layout, .grid2, .split, .split-33 { grid-template-columns: 1fr; }
+      .grid3, .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      nav.side { border-right: 0; border-bottom: 1px solid var(--line); }
+      nav.side [role="tablist"] { flex-direction: row; overflow-x: auto; }
+      nav.side button { white-space: nowrap; }
+    }
+    @media (max-width: 520px) {
+      .grid3, .grid4 { grid-template-columns: 1fr; }
+      .top h1 { font-size: 1.35rem; }
+    }
+    @media print {
+      .banner, nav.side, .appbar, .skip, .btn { display: none !important; }
+      .layout { display: block; }
+      body { background: #fff; }
+      .card { box-shadow: none; border: 0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="banner" role="note">
+    92 Logics prototype · Coral Coast Youth Voices. Prototype / fictional data only.
+    Not an official UNICEF system. Scripted AI suggestions; no live AI service; nothing leaves your browser.
+  </div>
+
+  <header class="top">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">92</div>
+      <div>
+        <p class="eyebrow">Qualitative AI sample · collect → process → analyse → report</p>
+        <h1>Coral Coast Youth Voices</h1>
+      </div>
+    </div>
+    <p class="lede">
+      A clickable sample of AI-assisted qualitative analysis for a fictional coastal youth study:
+      ingest KIIs/FGDs, review suggested codes, cluster themes, summarise on a dashboard, and approve a report draft with mandatory human review.
+      <span class="pt-label"> · Início · Relatório (UI labels only — not claiming Portuguese fluency)</span>
+    </p>
+  </header>
+
+  <div class="wrap" id="main" tabindex="-1">
+    <div class="card" id="app">
+      <div class="appbar">
+        <p class="who">
+          <strong>Coral Coast Learning Study</strong>
+          <span class="pill ocean">Fictional</span>
+          · English primary
+          · <span class="pt-label">Protótipo</span>
+        </p>
+        <p class="who muted" id="clock"></p>
+      </div>
+      <div class="layout">
+        <nav class="side" aria-label="Modules">
+          <div role="tablist" aria-orientation="vertical" id="tabs"></div>
+        </nav>
+        <div class="panel" id="panel" role="tabpanel" tabindex="0"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>92 Logics prototype · not an official UNICEF system · fictional sample data · scripted AI only</p>
+    <p><a href="https://www.92logics.com">https://www.92logics.com</a> · cowork@92logics.com</p>
+  </footer>
+  <div class="sr" aria-live="polite" id="live"></div>
+  <noscript><p class="banner">This prototype needs JavaScript in the browser. It does not call any server or store personal data.</p></noscript>
+
+<script>
+(function () {
+  "use strict";
+
+  var AS_OF = "2026-10-23";
+
+  var TRANSCRIPTS = [
+    {
+      id: "KII-01",
+      title: "Caregiver — after-school space",
+      type: "KII",
+      modality: "Remote audio",
+      duration: "18 min",
+      segment: "Caregiver",
+      date: "2026-09-12",
+      turns: [
+        { t: "00:01:12", sp: "Interviewer", txt: "What matters most when you choose a place for your child to study after school?" },
+        { t: "00:01:40", sp: "Respondent", txt: "Safety first. The room must be close, with an adult I know, and light until evening. Distance is a problem when the rains start." },
+        { t: "00:03:05", sp: "Respondent", txt: "I also want books that match the grade. Last year the materials were mixed and the children got confused." },
+        { t: "00:05:22", sp: "Interviewer", txt: "Any barriers to using the community learning room?" },
+        { t: "00:05:48", sp: "Respondent", txt: "Transport cost. And some days the facilitator is late, so caregivers wait outside with younger siblings." }
+      ]
+    },
+    {
+      id: "KII-02",
+      title: "Youth — digital skills interest",
+      type: "KII",
+      modality: "Notes (in-person)",
+      duration: "22 min",
+      segment: "Youth 15–19",
+      date: "2026-09-14",
+      turns: [
+        { t: "00:00:50", sp: "Interviewer", txt: "What would you like to learn that school does not cover well?" },
+        { t: "00:01:20", sp: "Respondent", txt: "How to make short videos and edit them. Also basic coding — friends talk about apps but we only get theory." },
+        { t: "00:04:10", sp: "Respondent", txt: "Data bundles are expensive. When the centre Wi-Fi works, we stay late. When it drops, we lose the day." },
+        { t: "00:07:30", sp: "Interviewer", txt: "Who encourages you?" },
+        { t: "00:07:55", sp: "Respondent", txt: "My cousin who finished a short course. Teachers are busy. Mentors would help more than posters." }
+      ]
+    },
+    {
+      id: "FGD-03",
+      title: "FGD — girls' learning circle",
+      type: "FGD",
+      modality: "Remote audio",
+      duration: "41 min",
+      segment: "Youth (girls)",
+      date: "2026-09-16",
+      turns: [
+        { t: "00:02:15", sp: "P1", txt: "Evening sessions clash with chores. Morning slots would be better for us." },
+        { t: "00:05:40", sp: "P2", txt: "I feel safer when there are two facilitators and the door stays open to the courtyard." },
+        { t: "00:09:05", sp: "P3", txt: "We want examples from girls who finished the course and found work or apprenticeships." },
+        { t: "00:14:20", sp: "P1", txt: "Transport tokens would change attendance. Walking after dark is not an option for many of us." },
+        { t: "00:22:00", sp: "P2", txt: "Portuguese materials help my mother understand what I am studying; English-only packs lose her." }
+      ]
+    },
+    {
+      id: "KII-04",
+      title: "Teacher — learning space quality",
+      type: "KII",
+      modality: "Remote audio",
+      duration: "25 min",
+      segment: "Educator",
+      date: "2026-09-18",
+      turns: [
+        { t: "00:01:05", sp: "Interviewer", txt: "What makes a learning space usable for mixed ages?" },
+        { t: "00:01:35", sp: "Respondent", txt: "Separate corners, clear schedules, and enough chairs. Noise from younger children stops older ones from reading." },
+        { t: "00:06:10", sp: "Respondent", txt: "We need simple assessment sheets — not heavy tests — so we can see who needs catch-up support." },
+        { t: "00:11:40", sp: "Respondent", txt: "Power cuts interrupt digital lessons. Printed packs as backup keep the session going." }
+      ]
+    },
+    {
+      id: "KII-05",
+      title: "Community facilitator — outreach",
+      type: "KII",
+      modality: "Notes (phone)",
+      duration: "16 min",
+      segment: "Facilitator",
+      date: "2026-09-20",
+      turns: [
+        { t: "00:00:40", sp: "Interviewer", txt: "How do families hear about the programme?" },
+        { t: "00:01:05", sp: "Respondent", txt: "Mostly through church and market announcements. Social media reaches some youth, not caregivers." },
+        { t: "00:04:55", sp: "Respondent", txt: "Trust takes time. Families ask who funds the activity and whether photos will be shared. We need clear consent scripts." },
+        { t: "00:09:30", sp: "Respondent", txt: "When we visit homes with a local volunteer, enrolment rises. Cold invitations by SMS do little." }
+      ]
+    },
+    {
+      id: "FGD-06",
+      title: "FGD — caregivers on barriers",
+      type: "FGD",
+      modality: "Remote audio",
+      duration: "38 min",
+      segment: "Caregiver",
+      date: "2026-09-22",
+      turns: [
+        { t: "00:03:10", sp: "C1", txt: "School fees already stretch us. Extra programme fees would push families out." },
+        { t: "00:08:45", sp: "C2", txt: "If the centre provides a snack, children stay through the afternoon session." },
+        { t: "00:15:20", sp: "C3", txt: "I worry about online strangers if tablets go home. Supervised centre use feels safer." },
+        { t: "00:21:05", sp: "C1", txt: "Report cards in plain language — Portuguese and English — help us support homework." },
+        { t: "00:28:40", sp: "C2", txt: "Rainy season flooding cuts the path to the centre for three weeks most years." }
+      ]
+    },
+    {
+      id: "KII-07",
+      title: "Youth — employment hopes",
+      type: "KII",
+      modality: "Remote audio",
+      duration: "20 min",
+      segment: "Youth 15–19",
+      date: "2026-09-25",
+      turns: [
+        { t: "00:01:00", sp: "Interviewer", txt: "What job or skill path feels realistic in the next two years?" },
+        { t: "00:01:30", sp: "Respondent", txt: "Repairing phones or helping in a small shop with inventory apps. University feels far without scholarships." },
+        { t: "00:05:50", sp: "Respondent", txt: "Certificates matter to employers here. A short accredited course beats a long informal workshop." },
+        { t: "00:10:15", sp: "Respondent", txt: "I need practice with customers — soft skills — not only slides about customer service." }
+      ]
+    },
+    {
+      id: "KII-08",
+      title: "District focal point — services",
+      type: "KII",
+      modality: "Notes (in-person)",
+      duration: "27 min",
+      segment: "Local official",
+      date: "2026-09-28",
+      turns: [
+        { t: "00:02:00", sp: "Interviewer", txt: "Where do youth services break down in practice?" },
+        { t: "00:02:40", sp: "Respondent", txt: "Referral between education and health is paper-based and slow. Families repeat the same story at each desk." },
+        { t: "00:08:20", sp: "Respondent", txt: "We lack shared calendars. Two programmes book the same hall and both arrive with materials." },
+        { t: "00:14:55", sp: "Respondent", txt: "Data for planning should be simple dashboards, not thick reports nobody opens. Themes from interviews help more than raw counts alone." }
+      ]
+    }
+  ];
+
+  var CODEBOOK = [
+    { id: "C-SAFE", label: "Safety & safeguarding", def: "Physical safety, adult presence, consent, photo/privacy concerns." },
+    { id: "C-ACCESS", label: "Access & distance", def: "Travel, transport cost, flooding, schedule clash with chores." },
+    { id: "C-LEARN", label: "Learning quality", def: "Materials, facilitators, assessment, age-mixing, power/connectivity." },
+    { id: "C-DIGITAL", label: "Digital skills & connectivity", def: "Devices, Wi-Fi, data cost, video/coding interest." },
+    { id: "C-TRUST", label: "Trust & outreach", def: "How families hear about programmes, local volunteers, funding clarity." },
+    { id: "C-LANG", label: "Language & inclusion", def: "Portuguese/English materials, caregiver comprehension." },
+    { id: "C-ECON", label: "Economic barriers", def: "Fees, snacks, scholarships, employment pathways." },
+    { id: "C-COORD", label: "Service coordination", def: "Referrals, shared calendars, planning data." }
+  ];
+
+  /* Scripted suggestions per transcript (not live LLM) */
+  var SUGGESTIONS = {
+    "KII-01": [
+      { id: "s1", excerpt: "Safety first. The room must be close, with an adult I know…", code: "C-SAFE", conf: 0.91 },
+      { id: "s2", excerpt: "Distance is a problem when the rains start.", code: "C-ACCESS", conf: 0.88 },
+      { id: "s3", excerpt: "I also want books that match the grade.", code: "C-LEARN", conf: 0.84 },
+      { id: "s4", excerpt: "Transport cost. And some days the facilitator is late…", code: "C-ACCESS", conf: 0.86 }
+    ],
+    "KII-02": [
+      { id: "s5", excerpt: "How to make short videos and edit them. Also basic coding…", code: "C-DIGITAL", conf: 0.93 },
+      { id: "s6", excerpt: "Data bundles are expensive. When the centre Wi-Fi works…", code: "C-DIGITAL", conf: 0.9 },
+      { id: "s7", excerpt: "Mentors would help more than posters.", code: "C-TRUST", conf: 0.79 }
+    ],
+    "FGD-03": [
+      { id: "s8", excerpt: "Evening sessions clash with chores. Morning slots would be better…", code: "C-ACCESS", conf: 0.87 },
+      { id: "s9", excerpt: "I feel safer when there are two facilitators…", code: "C-SAFE", conf: 0.92 },
+      { id: "s10", excerpt: "Transport tokens would change attendance.", code: "C-ECON", conf: 0.85 },
+      { id: "s11", excerpt: "Portuguese materials help my mother understand…", code: "C-LANG", conf: 0.89 }
+    ],
+    "KII-04": [
+      { id: "s12", excerpt: "Separate corners, clear schedules, and enough chairs.", code: "C-LEARN", conf: 0.86 },
+      { id: "s13", excerpt: "Simple assessment sheets — not heavy tests…", code: "C-LEARN", conf: 0.83 },
+      { id: "s14", excerpt: "Power cuts interrupt digital lessons. Printed packs as backup…", code: "C-DIGITAL", conf: 0.81 }
+    ],
+    "KII-05": [
+      { id: "s15", excerpt: "Mostly through church and market announcements.", code: "C-TRUST", conf: 0.88 },
+      { id: "s16", excerpt: "Families ask who funds the activity and whether photos will be shared.", code: "C-SAFE", conf: 0.9 },
+      { id: "s17", excerpt: "When we visit homes with a local volunteer, enrolment rises.", code: "C-TRUST", conf: 0.87 }
+    ],
+    "FGD-06": [
+      { id: "s18", excerpt: "Extra programme fees would push families out.", code: "C-ECON", conf: 0.91 },
+      { id: "s19", excerpt: "If the centre provides a snack, children stay…", code: "C-ECON", conf: 0.82 },
+      { id: "s20", excerpt: "Supervised centre use feels safer.", code: "C-SAFE", conf: 0.84 },
+      { id: "s21", excerpt: "Report cards in plain language — Portuguese and English…", code: "C-LANG", conf: 0.88 },
+      { id: "s22", excerpt: "Rainy season flooding cuts the path…", code: "C-ACCESS", conf: 0.9 }
+    ],
+    "KII-07": [
+      { id: "s23", excerpt: "University feels far without scholarships.", code: "C-ECON", conf: 0.86 },
+      { id: "s24", excerpt: "A short accredited course beats a long informal workshop.", code: "C-LEARN", conf: 0.84 },
+      { id: "s25", excerpt: "I need practice with customers — soft skills…", code: "C-LEARN", conf: 0.8 }
+    ],
+    "KII-08": [
+      { id: "s26", excerpt: "Referral between education and health is paper-based and slow.", code: "C-COORD", conf: 0.92 },
+      { id: "s27", excerpt: "Two programmes book the same hall…", code: "C-COORD", conf: 0.89 },
+      { id: "s28", excerpt: "Themes from interviews help more than raw counts alone.", code: "C-LEARN", conf: 0.75 }
+    ]
+  };
+
+  var THEMES_SEED = [
+    {
+      id: "T1",
+      name: "Safe, supervised learning spaces",
+      codes: ["C-SAFE"],
+      sentiment: "Concern → Hope",
+      quotes: [
+        { src: "KII-01", text: "Safety first. The room must be close, with an adult I know…" },
+        { src: "FGD-03", text: "I feel safer when there are two facilitators and the door stays open…" }
+      ]
+    },
+    {
+      id: "T2",
+      name: "Distance, weather and schedule barriers",
+      codes: ["C-ACCESS"],
+      sentiment: "Frustration",
+      quotes: [
+        { src: "FGD-06", text: "Rainy season flooding cuts the path to the centre…" },
+        { src: "FGD-03", text: "Evening sessions clash with chores." }
+      ]
+    },
+    {
+      id: "T3",
+      name: "Digital opportunity vs connectivity cost",
+      codes: ["C-DIGITAL"],
+      sentiment: "Aspiration",
+      quotes: [
+        { src: "KII-02", text: "Data bundles are expensive. When the centre Wi-Fi works, we stay late." },
+        { src: "KII-04", text: "Power cuts interrupt digital lessons. Printed packs as backup…" }
+      ]
+    },
+    {
+      id: "T4",
+      name: "Language, trust and caregiver inclusion",
+      codes: ["C-LANG", "C-TRUST"],
+      sentiment: "Mixed",
+      quotes: [
+        { src: "FGD-03", text: "Portuguese materials help my mother understand what I am studying…" },
+        { src: "KII-05", text: "When we visit homes with a local volunteer, enrolment rises." }
+      ]
+    },
+    {
+      id: "T5",
+      name: "Cost, credentials and coordination gaps",
+      codes: ["C-ECON", "C-COORD", "C-LEARN"],
+      sentiment: "Pragmatic",
+      quotes: [
+        { src: "FGD-06", text: "Extra programme fees would push families out." },
+        { src: "KII-08", text: "Referral between education and health is paper-based and slow." }
+      ]
+    }
+  ];
+
+  var TABS = [
+    { id: "home", label: "Início · Home" },
+    { id: "ingest", label: "Ingest" },
+    { id: "coding", label: "Coding" },
+    { id: "themes", label: "Themes" },
+    { id: "dash", label: "Dashboard" },
+    { id: "report", label: "Relatório · Report" }
+  ];
+
+  var S = {
+    tab: "home",
+    selectedTx: "KII-01",
+    uploadedName: null,
+    decisions: {},
+    audit: [],
+    themes: THEMES_SEED.map(function (t) { return Object.assign({}, t, { quotes: t.quotes.slice(), codes: t.codes.slice() }); }),
+    reportText: "",
+    reportHistory: [],
+    mergedNote: null
+  };
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function say(msg) {
+    $("live").textContent = "";
+    setTimeout(function () { $("live").textContent = msg; }, 30);
+  }
+  function stamp() {
+    var d = new Date();
+    return d.toISOString().slice(0, 16).replace("T", " ") + " UTC";
+  }
+  function codeLabel(id) {
+    var c = CODEBOOK.filter(function (x) { return x.id === id; })[0];
+    return c ? c.label : id;
+  }
+  function getTx(id) {
+    return TRANSCRIPTS.filter(function (t) { return t.id === id; })[0];
+  }
+  function allSuggestions() {
+    var out = [];
+    Object.keys(SUGGESTIONS).forEach(function (tid) {
+      SUGGESTIONS[tid].forEach(function (s) {
+        out.push(Object.assign({ tx: tid }, s));
+      });
+    });
+    return out;
+  }
+  function decisionOf(id) {
+    return S.decisions[id] || { status: "pending", code: null, note: "" };
+  }
+
+  function ensureSuggestionsLoaded(txId) {
+    var list = SUGGESTIONS[txId] || [];
+    list.forEach(function (s) {
+      if (!S.decisions[s.id]) {
+        S.decisions[s.id] = { status: "pending", code: s.code, note: "" };
+      }
+    });
+  }
+
+  function buildReportDraft() {
+    var accepted = allSuggestions().filter(function (s) {
+      return decisionOf(s.id).status === "accepted" || decisionOf(s.id).status === "edited";
+    });
+    var themeLines = S.themes.map(function (t, i) {
+      return (i + 1) + ". " + t.name + " (" + t.sentiment + ") — codes: " +
+        t.codes.map(codeLabel).join(", ");
+    }).join("\n");
+    return [
+      "Coral Coast Youth Voices — draft findings summary (sample)",
+      "Study period: September 2026 · As of " + AS_OF,
+      "Sources: " + TRANSCRIPTS.length + " fictional KIIs/FGDs · Human-reviewed codes in this session: " + accepted.length,
+      "",
+      "Purpose",
+      "This draft summarises themes from a fictional coastal youth learning study. It is a scripted prototype narrative for demonstration only.",
+      "",
+      "Headline themes",
+      themeLines,
+      "",
+      "Cross-cutting points",
+      "- Caregivers and youth both prioritise supervised, nearby spaces with reliable adults.",
+      "- Connectivity and transport costs limit digital and after-school participation.",
+      "- Portuguese-accessible materials and local outreach improve caregiver trust.",
+      "- Economic barriers and weak service coordination reduce continuity of support.",
+      "",
+      "Illustrative quotes (fictional)",
+      "- \"" + S.themes[0].quotes[0].text + "\" (" + S.themes[0].quotes[0].src + ")",
+      "- \"" + S.themes[1].quotes[0].text + "\" (" + S.themes[1].quotes[0].src + ")",
+      "",
+      "Limitations",
+      "- Sample is small and fictional; not representative of any real community.",
+      "- Auto-suggested codes require human acceptance before use in a live study.",
+      "",
+      "Next steps (illustrative)",
+      "- Validate themes with a validation workshop.",
+      "- Align programme calendars and referral pathways.",
+      "- Pilot morning slots and transport support for girls' circles.",
+      "",
+      "[Scripted draft — edit before approving. Not from a live AI service.]"
+    ].join("\n");
+  }
+
+  function prevalence() {
+    var counts = {};
+    CODEBOOK.forEach(function (c) { counts[c.id] = 0; });
+    allSuggestions().forEach(function (s) {
+      var d = decisionOf(s.id);
+      if (d.status === "accepted" || d.status === "edited") {
+        var code = d.code || s.code;
+        counts[code] = (counts[code] || 0) + 1;
+      } else if (d.status === "pending") {
+        counts[s.code] = (counts[s.code] || 0) + 0.35;
+      }
+    });
+    return counts;
+  }
+
+  function exportCsv() {
+    var lines = ["theme_id,theme_name,sentiment,codes,quote_count"];
+    S.themes.forEach(function (t) {
+      lines.push([t.id, '"' + t.name.replace(/"/g, '""') + '"', '"' + t.sentiment + '"',
+        '"' + t.codes.join("; ") + '"', t.quotes.length].join(","));
+    });
+    var blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "coral-coast-themes-sample.csv";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    say("CSV downloaded in browser");
+  }
+
+  function exportPdf() {
+    window.print();
+    say("Print / Save as PDF dialog opened");
+  }
+
+  function renderTabs() {
+    $("tabs").innerHTML = TABS.map(function (t) {
+      return '<button type="button" role="tab" id="tab-' + t.id + '" aria-selected="' +
+        (S.tab === t.id ? "true" : "false") + '" aria-controls="panel" data-tab="' + t.id + '">' +
+        esc(t.label) + "</button>";
+    }).join("");
+    Array.prototype.forEach.call($("tabs").querySelectorAll("button"), function (btn) {
+      btn.addEventListener("click", function () {
+        S.tab = btn.getAttribute("data-tab");
+        say(btn.textContent + " opened");
+        render();
+        $("panel").focus();
+      });
+    });
+  }
+
+  function viewHome() {
+    return [
+      '<p class="sample-note"><strong>Ethics / prototype banner:</strong> Prototype / fictional data. No real respondents, no UNICEF logos, not an official UNICEF system. Suggestions are scripted templates — no live LLM and no data leaves the browser.</p>',
+      '<h2>Study brief</h2>',
+      '<p>Coral Coast Youth Voices is a <strong>fictional</strong> qualitative study about access to learning spaces, caregiver priorities, and barriers to youth services in a made-up coastal district. Use the tabs to walk the collect → process → analyse → report path.</p>',
+      '<div class="grid3" style="margin:1rem 0">',
+      '  <div class="kpi"><div class="v">' + TRANSCRIPTS.length + '</div><div class="l">Sample transcripts</div></div>',
+      '  <div class="kpi"><div class="v">' + CODEBOOK.length + '</div><div class="l">Codebook entries</div></div>',
+      '  <div class="kpi"><div class="v">' + S.themes.length + '</div><div class="l">Draft themes</div></div>',
+      '</div>',
+      '<h3>How to click through</h3>',
+      '<ol>',
+      '  <li><strong>Ingest</strong> — open a preloaded KII/FGD or “upload” a local text file (stays in the browser).</li>',
+      '  <li><strong>Coding</strong> — review auto-suggested codes; accept, edit, or reject. Decisions go to the audit log.</li>',
+      '  <li><strong>Themes</strong> — explore clustered themes with quote evidence; try cosmetic merge/split.</li>',
+      '  <li><strong>Dashboard</strong> — prevalence, sentiment-lite, segments; export CSV or print/PDF.</li>',
+      '  <li><strong>Relatório · Report</strong> — generate a template narrative; approve or request changes (mandatory human step).</li>',
+      '</ol>',
+      '<p class="fine">Light Portuguese chrome labels (Início, Relatório, Protótipo) show language awareness only — this demo does not claim Portuguese fluency or live NLP.</p>'
+    ].join("\n");
+  }
+
+  function viewIngest() {
+    ensureSuggestionsLoaded(S.selectedTx);
+    var list = TRANSCRIPTS.map(function (t) {
+      return '<button type="button" aria-pressed="' + (S.selectedTx === t.id ? "true" : "false") +
+        '" data-tx="' + t.id + '"><strong>' + esc(t.id) + '</strong> · ' + esc(t.title) +
+        '<br><span class="muted" style="font-size:0.82rem">' + esc(t.type) + ' · ' + esc(t.modality) +
+        ' · ' + esc(t.duration) + ' · ' + esc(t.segment) + '</span></button>';
+    }).join("");
+    var tx = getTx(S.selectedTx);
+    var turns = (tx ? tx.turns : []).map(function (u) {
+      return '<div class="turn"><span class="who">' + esc(u.sp) + '</span><span class="ts">' +
+        esc(u.t) + '</span><p class="txt">' + esc(u.txt) + '</p></div>';
+    }).join("");
+    var uploadNote = S.uploadedName
+      ? '<p class="pill ok">Local file loaded (browser only): ' + esc(S.uploadedName) + '</p>'
+      : '<p class="muted fine">Upload stays in memory for this session. Nothing is sent to a server.</p>';
+
+    return [
+      '<p class="sample-note">Preloaded fictional transcripts. Optional local “upload” never leaves the browser.</p>',
+      '<div class="split-33">',
+      '  <div>',
+      '    <h2>Sources</h2>',
+      '    <div class="list-pick" role="listbox" aria-label="Transcripts">' + list + '</div>',
+      '    <label for="file-up">Upload local .txt (optional)</label>',
+      '    <input type="file" id="file-up" accept=".txt,text/plain">',
+      uploadNote,
+      '  </div>',
+      '  <div>',
+      '    <h2>Transcript viewer</h2>',
+      tx ? '<p class="row"><span class="pill">' + esc(tx.id) + '</span><span class="pill ocean">' + esc(tx.type) +
+        '</span><span class="muted">' + esc(tx.date) + ' · ' + esc(tx.modality) + '</span></p>' : '',
+      '    <div class="transcript-box" tabindex="0" aria-label="Transcript with timestamps">' + turns + '</div>',
+      '  </div>',
+      '</div>'
+    ].join("\n");
+  }
+
+  function viewCoding() {
+    ensureSuggestionsLoaded(S.selectedTx);
+    var txOpts = TRANSCRIPTS.map(function (t) {
+      return '<option value="' + t.id + '"' + (S.selectedTx === t.id ? " selected" : "") + '>' +
+        esc(t.id + " — " + t.title) + '</option>';
+    }).join("");
+    var list = (SUGGESTIONS[S.selectedTx] || []).map(function (s) {
+      var d = decisionOf(s.id);
+      var cls = d.status === "pending" ? "" : d.status;
+      var codeOpts = CODEBOOK.map(function (c) {
+        var sel = (d.code || s.code) === c.id ? " selected" : "";
+        return '<option value="' + c.id + '"' + sel + '>' + esc(c.label) + '</option>';
+      }).join("");
+      return [
+        '<div class="code-sug ' + cls + '" data-sid="' + s.id + '">',
+        '  <p class="quote">' + esc(s.excerpt) + '<span class="meta">Suggested · confidence ' +
+          Math.round(s.conf * 100) + '% · scripted</span></p>',
+        '  <label for="code-' + s.id + '">Code</label>',
+        '  <select id="code-' + s.id + '" data-sid="' + s.id + '" class="code-sel"' +
+          (d.status === "rejected" ? " disabled" : "") + '>' + codeOpts + '</select>',
+        '  <div class="row" style="margin-top:0.5rem">',
+        '    <button type="button" class="btn sm" data-act="accept" data-sid="' + s.id + '"' +
+          (d.status === "accepted" ? " disabled" : "") + '>Accept</button>',
+        '    <button type="button" class="btn sm secondary" data-act="edit" data-sid="' + s.id + '">Save edit</button>',
+        '    <button type="button" class="btn sm danger" data-act="reject" data-sid="' + s.id + '"' +
+          (d.status === "rejected" ? " disabled" : "") + '>Reject</button>',
+        '    <span class="pill ' + (d.status === "accepted" || d.status === "edited" ? "ok" :
+          d.status === "rejected" ? "bad" : "warn") + '">' + esc(d.status) + '</span>',
+        '  </div>',
+        '</div>'
+      ].join("");
+    }).join("");
+
+    var cbRows = CODEBOOK.map(function (c) {
+      return '<tr><td class="nw"><code>' + esc(c.id) + '</code></td><td>' + esc(c.label) +
+        '</td><td>' + esc(c.def) + '</td></tr>';
+    }).join("");
+
+    var audit = S.audit.length === 0
+      ? '<p class="muted">No coding decisions yet in this session.</p>'
+      : '<ul class="stack" style="padding-left:1.1rem;margin:0;max-height:14rem;overflow:auto">' +
+        S.audit.slice().reverse().map(function (a) {
+          return '<li><strong>' + esc(a.at) + '</strong> · ' + esc(a.action) + ' · ' + esc(a.detail) + '</li>';
+        }).join("") + '</ul>';
+
+    return [
+      '<p class="sample-note">Auto-suggested codes are scripted heuristics mapped to each transcript — not a live LLM call. A person must accept, edit, or reject.</p>',
+      '<label for="code-tx">Active transcript</label>',
+      '<select id="code-tx">' + txOpts + '</select>',
+      '<div class="split" style="margin-top:1rem">',
+      '  <div><h2>Suggestions</h2>' + (list || '<p class="muted">No suggestions.</p>') + '</div>',
+      '  <div class="stack">',
+      '    <div><h2>Codebook</h2><div class="tablewrap"><table><caption>Shared codes</caption>',
+      '    <thead><tr><th>ID</th><th>Label</th><th>Definition</th></tr></thead><tbody>' + cbRows +
+      '</tbody></table></div></div>',
+      '    <div class="review"><h2>Audit log</h2>' + audit + '</div>',
+      '  </div>',
+      '</div>'
+    ].join("\n");
+  }
+
+  function viewThemes() {
+    var cards = S.themes.map(function (t, idx) {
+      var quotes = t.quotes.map(function (q) {
+        return '<div class="quote">' + esc(q.text) + '<div class="meta">' + esc(q.src) + '</div></div>';
+      }).join("");
+      return [
+        '<div class="theme-card" data-tid="' + t.id + '">',
+        '  <div class="row" style="justify-content:space-between">',
+        '    <h3 style="margin:0">' + esc(t.name) + '</h3>',
+        '    <span class="pill ocean">' + esc(t.sentiment) + '</span>',
+      '  </div>',
+        '  <p class="fine">Codes: ' + t.codes.map(function (c) { return esc(codeLabel(c)); }).join(" · ") + '</p>',
+        quotes,
+        '  <div class="row" style="margin-top:0.5rem">',
+        '    <button type="button" class="btn sm secondary" data-theme-act="split" data-idx="' + idx + '">Split (cosmetic)</button>',
+        idx > 0 ? '<button type="button" class="btn sm secondary" data-theme-act="merge" data-idx="' + idx + '">Merge into previous</button>' : '',
+        '  </div>',
+        '</div>'
+      ].join("");
+    }).join("");
+
+    return [
+      '<p class="sample-note">Themes cluster codes with quote evidence. Merge/split controls are cosmetic for this prototype session.</p>',
+      S.mergedNote ? '<p class="pill warn">' + esc(S.mergedNote) + '</p>' : '',
+      '<div class="stack">' + cards + '</div>'
+    ].join("\n");
+  }
+
+  function viewDash() {
+    var counts = prevalence();
+    var max = 1;
+    Object.keys(counts).forEach(function (k) { if (counts[k] > max) max = counts[k]; });
+    var rows = CODEBOOK.map(function (c) {
+      var n = Math.round(counts[c.id] * 10) / 10;
+      var pct = Math.round((counts[c.id] / max) * 100);
+      return '<tr><td>' + esc(c.label) + '</td><td><div class="bar" title="' + n +
+        '"><span style="width:' + pct + '%"></span></div></td><td class="num">' + n + '</td></tr>';
+    }).join("");
+
+    var segMap = {};
+    TRANSCRIPTS.forEach(function (t) {
+      segMap[t.segment] = (segMap[t.segment] || 0) + 1;
+    });
+    var segRows = Object.keys(segMap).map(function (k) {
+      return '<tr><td>' + esc(k) + '</td><td class="num">' + segMap[k] + '</td></tr>';
+    }).join("");
+
+    var sentRows = S.themes.map(function (t) {
+      return '<tr><td>' + esc(t.name) + '</td><td><span class="pill">' + esc(t.sentiment) +
+        '</span></td><td class="num">' + t.quotes.length + '</td></tr>';
+    }).join("");
+
+    var accepted = allSuggestions().filter(function (s) {
+      var st = decisionOf(s.id).status;
+      return st === "accepted" || st === "edited";
+    }).length;
+
+    return [
+      '<p class="sample-note">Dashboard uses session coding decisions plus light prior weights for pending items. Export stays in-browser.</p>',
+      '<div class="grid4">',
+      '  <div class="kpi"><div class="v">' + TRANSCRIPTS.length + '</div><div class="l">Transcripts</div></div>',
+      '  <div class="kpi"><div class="v">' + accepted + '</div><div class="l">Human-accepted codes</div></div>',
+      '  <div class="kpi"><div class="v">' + S.themes.length + '</div><div class="l">Themes</div></div>',
+      '  <div class="kpi"><div class="v">' + S.audit.length + '</div><div class="l">Audit events</div></div>',
+      '</div>',
+      '<div class="row" style="margin:0.75rem 0">',
+      '  <button type="button" class="btn ocean" id="exp-csv">Export themes CSV</button>',
+      '  <button type="button" class="btn secondary" id="exp-pdf">Export / print PDF</button>',
+      '</div>',
+      '<div class="grid2">',
+      '  <div class="tablewrap"><table><caption>Theme prevalence (code weights)</caption>',
+      '  <thead><tr><th>Code</th><th>Bar</th><th class="num">Weight</th></tr></thead><tbody>' + rows + '</tbody></table></div>',
+      '  <div class="stack">',
+      '    <div class="tablewrap"><table><caption>Respondent segments</caption>',
+      '    <thead><tr><th>Segment</th><th class="num">Count</th></tr></thead><tbody>' + segRows + '</tbody></table></div>',
+      '    <div class="tablewrap"><table><caption>Sentiment-lite by theme</caption>',
+      '    <thead><tr><th>Theme</th><th>Tag</th><th class="num">Quotes</th></tr></thead><tbody>' + sentRows + '</tbody></table></div>',
+      '  </div>',
+      '</div>'
+    ].join("\n");
+  }
+
+  function viewReport() {
+    var hist = S.reportHistory.length === 0
+      ? '<p class="muted">No report reviews yet in this session.</p>'
+      : '<ul class="stack" style="padding-left:1.1rem;margin:0">' + S.reportHistory.map(function (h) {
+          return '<li><strong>' + esc(h.at) + '</strong> · ' + esc(h.action) + '</li>';
+        }).join("") + '</ul>';
+
+    return [
+      '<p class="sample-note">Template AI narrative filled from themes and session codes. Mandatory human approve / request-changes. No live AI API.</p>',
+      '<div class="split">',
+      '  <div class="review">',
+      '    <h2>Relatório · Report draft</h2>',
+      '    <div class="row">',
+      '      <button type="button" class="btn" id="rep-draft">Generate draft</button>',
+      '      <button type="button" class="btn secondary" id="rep-clear">Clear</button>',
+      '    </div>',
+      '    <label for="rep-text">Editable draft</label>',
+      '    <textarea id="rep-text" aria-label="Editable report draft">' + esc(S.reportText) + '</textarea>',
+      '    <div class="row" style="margin-top:0.75rem">',
+      '      <button type="button" class="btn" id="rep-approve"' + (S.reportText ? "" : " disabled") + '>Approve</button>',
+      '      <button type="button" class="btn danger" id="rep-reject"' + (S.reportText ? "" : " disabled") + '>Request changes</button>',
+      '    </div>',
+      '    <p class="fine">Approve or request changes to log a human review step — required before any “final” narrative in a real deployment.</p>',
+      '  </div>',
+      '  <div>',
+      '    <h2>Review history</h2>',
+      hist,
+      '  </div>',
+      '</div>'
+    ].join("\n");
+  }
+
+  function bindPanel() {
+    if (S.tab === "ingest") {
+      Array.prototype.forEach.call(document.querySelectorAll("[data-tx]"), function (btn) {
+        btn.addEventListener("click", function () {
+          S.selectedTx = btn.getAttribute("data-tx");
+          say("Opened " + S.selectedTx);
+          render();
+        });
+      });
+      var file = $("file-up");
+      if (file) {
+        file.addEventListener("change", function () {
+          var f = file.files && file.files[0];
+          if (!f) return;
+          var reader = new FileReader();
+          reader.onload = function () {
+            S.uploadedName = f.name;
+            var text = String(reader.result || "");
+            var lines = text.split(/\r?\n/).filter(function (l) { return l.trim(); }).slice(0, 12);
+            var custom = {
+              id: "UP-LOCAL",
+              title: f.name,
+              type: "Upload",
+              modality: "Local file",
+              duration: "n/a",
+              segment: "Uploaded",
+              date: AS_OF,
+              turns: lines.length ? lines.map(function (l, i) {
+                return { t: "00:" + String(i).padStart(2, "0") + ":00", sp: "Line", txt: l.slice(0, 400) };
+              }) : [{ t: "00:00:00", sp: "System", txt: "(Empty file)" }]
+            };
+            var existing = TRANSCRIPTS.filter(function (t) { return t.id === "UP-LOCAL"; })[0];
+            if (existing) {
+              Object.assign(existing, custom);
+            } else {
+              TRANSCRIPTS.push(custom);
+            }
+            SUGGESTIONS["UP-LOCAL"] = [
+              { id: "up1", excerpt: (lines[0] || "Uploaded text").slice(0, 120), code: "C-LEARN", conf: 0.7 }
+            ];
+            S.selectedTx = "UP-LOCAL";
+            say("Local file loaded in browser only");
+            render();
+          };
+          reader.readAsText(f);
+        });
+      }
+    }
+
+    if (S.tab === "coding") {
+      var txSel = $("code-tx");
+      if (txSel) {
+        txSel.addEventListener("change", function () {
+          S.selectedTx = txSel.value;
+          render();
+        });
+      }
+      Array.prototype.forEach.call(document.querySelectorAll("[data-act]"), function (btn) {
+        btn.addEventListener("click", function () {
+          var sid = btn.getAttribute("data-sid");
+          var act = btn.getAttribute("data-act");
+          var sel = document.getElementById("code-" + sid);
+          var code = sel ? sel.value : decisionOf(sid).code;
+          if (act === "accept") {
+            S.decisions[sid] = { status: "accepted", code: code, note: "" };
+            S.audit.push({ at: stamp(), action: "Accept", detail: sid + " → " + codeLabel(code) });
+            say("Code accepted");
+          } else if (act === "edit") {
+            S.decisions[sid] = { status: "edited", code: code, note: "edited" };
+            S.audit.push({ at: stamp(), action: "Edit", detail: sid + " → " + codeLabel(code) });
+            say("Code edit saved");
+          } else if (act === "reject") {
+            S.decisions[sid] = { status: "rejected", code: code, note: "" };
+            S.audit.push({ at: stamp(), action: "Reject", detail: sid });
+            say("Suggestion rejected");
+          }
+          render();
+        });
+      });
+    }
+
+    if (S.tab === "themes") {
+      Array.prototype.forEach.call(document.querySelectorAll("[data-theme-act]"), function (btn) {
+        btn.addEventListener("click", function () {
+          var act = btn.getAttribute("data-theme-act");
+          var idx = parseInt(btn.getAttribute("data-idx"), 10);
+          if (act === "merge" && idx > 0) {
+            var cur = S.themes[idx];
+            var prev = S.themes[idx - 1];
+            prev.name = prev.name + " + " + cur.name;
+            prev.codes = prev.codes.concat(cur.codes.filter(function (c) { return prev.codes.indexOf(c) < 0; }));
+            prev.quotes = prev.quotes.concat(cur.quotes);
+            prev.sentiment = "Merged";
+            S.themes.splice(idx, 1);
+            S.mergedNote = "Merged theme into previous (cosmetic, session only).";
+            say("Themes merged");
+          } else if (act === "split") {
+            var t = S.themes[idx];
+            if (t.quotes.length < 2) {
+              S.mergedNote = "Need at least two quotes to split.";
+              say("Cannot split");
+            } else {
+              var moved = t.quotes.pop();
+              var nid = t.id + "-b";
+              S.themes.splice(idx + 1, 0, {
+                id: nid,
+                name: t.name + " (split)",
+                codes: t.codes.slice(0, 1),
+                sentiment: t.sentiment,
+                quotes: [moved]
+              });
+              S.mergedNote = "Split off one quote into a new theme card (cosmetic).";
+              say("Theme split");
+            }
+          }
+          render();
+        });
+      });
+    }
+
+    if (S.tab === "dash") {
+      var csv = $("exp-csv");
+      var pdf = $("exp-pdf");
+      if (csv) csv.addEventListener("click", exportCsv);
+      if (pdf) pdf.addEventListener("click", exportPdf);
+    }
+
+    if (S.tab === "report") {
+      var draft = $("rep-draft");
+      var clear = $("rep-clear");
+      var approve = $("rep-approve");
+      var reject = $("rep-reject");
+      var area = $("rep-text");
+      if (area) {
+        area.addEventListener("input", function () { S.reportText = area.value; });
+      }
+      if (draft) {
+        draft.addEventListener("click", function () {
+          S.reportText = buildReportDraft();
+          say("Report draft generated from template");
+          render();
+        });
+      }
+      if (clear) {
+        clear.addEventListener("click", function () {
+          S.reportText = "";
+          say("Draft cleared");
+          render();
+        });
+      }
+      if (approve) {
+        approve.addEventListener("click", function () {
+          if (area) S.reportText = area.value;
+          S.reportHistory.push({ at: stamp(), action: "Approved report draft" });
+          say("Report approved (session log)");
+          render();
+        });
+      }
+      if (reject) {
+        reject.addEventListener("click", function () {
+          if (area) S.reportText = area.value;
+          S.reportHistory.push({ at: stamp(), action: "Requested changes on report draft" });
+          say("Changes requested");
+          render();
+        });
+      }
+    }
+  }
+
+  function render() {
+    renderTabs();
+    var html = "";
+    if (S.tab === "home") html = viewHome();
+    else if (S.tab === "ingest") html = viewIngest();
+    else if (S.tab === "coding") html = viewCoding();
+    else if (S.tab === "themes") html = viewThemes();
+    else if (S.tab === "dash") html = viewDash();
+    else if (S.tab === "report") html = viewReport();
+    $("panel").innerHTML = html;
+    bindPanel();
+  }
+
+  function tickClock() {
+    try {
+      $("clock").textContent = new Date().toLocaleString("en-GB", {
+        timeZone: "Asia/Karachi",
+        dateStyle: "medium",
+        timeStyle: "short"
+      }) + " PKT (sample clock)";
+    } catch (e) {
+      $("clock").textContent = AS_OF;
+    }
+  }
+
+  tickClock();
+  setInterval(tickClock, 60000);
+  render();
+})();
+</script>
+</body>
+</html>
